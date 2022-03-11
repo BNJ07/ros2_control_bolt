@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from inspect import Parameter
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution, EnvironmentVariable, TextSubstitution
+from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution, EnvironmentVariable
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
-def generate_launch_description():
+def generate_launch_description():        
     # Declare arguments
     declared_arguments = []
     declared_arguments.append(
@@ -133,7 +134,7 @@ def generate_launch_description():
             "slowdown:=",
             slowdown,
         ]
-    print(robot_description_content_expr)
+
     robot_description_content = Command(robot_description_content_expr)
     robot_description = {"robot_description": robot_description_content}
 
@@ -145,7 +146,7 @@ def generate_launch_description():
         ]
     )
     rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare(description_package), "rviz", "bolt.rviz"]
+        [FindPackageShare(description_package), "config", "bolt.rviz"]
     )
 
     control_node = Node(
@@ -177,7 +178,7 @@ def generate_launch_description():
         executable="rviz2",
         name="rviz2",
         output="log",
-        arguments=["-d", rviz_config_file],
+        arguments = ["-d", rviz_config_file],
     )
 
     joint_state_broadcaster_spawner = Node(
